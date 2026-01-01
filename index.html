@@ -26,6 +26,7 @@
             border: 1px solid rgba(255, 255, 255, 0.7);
         }
 
+        /* Floating Navigation */
         .nav-pill {
             position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
             z-index: 100; display: flex; gap: 12px; padding: 10px 20px;
@@ -40,16 +41,20 @@
         .reveal { opacity: 0; transform: translateY(30px); transition: all 1s ease-out; }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
+        /* Music Player Animation */
         .album-art.playing { animation: rotate 12s linear infinite; }
         @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         
         input[type="range"] { accent-color: #d4a373; cursor: pointer; }
 
+        /* Heart Effect */
         .heart-particle { position: fixed; pointer-events: none; z-index: 1000; animation: heartRise 2s ease-out forwards; }
         @keyframes heartRise { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-150px) scale(1.5); opacity: 0; } }
-    
+        
+        /* Gallery Hover */
         .gallery-item:hover img { transform: scale(1.1); filter: grayscale(0); }
 
+        /* Vinyl record look */
         .album-art { background: #000; position: relative; overflow: hidden; }
         .album-art::before {
             content: "";
@@ -58,10 +63,17 @@
             z-index: 1;
         }
         .album-art > i { position: relative; z-index: 2; }
+
+        /* Mobile adjustments */
+        @media (max-width: 768px) {
+            main { width: 100% !important; margin: 0 !important; }
+            body { overflow-x: auto; } /* allow horizontal scroll if needed, but vertical ok */
+        }
     </style>
 </head>
 <body>
 
+    <!-- Floating Navigation -->
     <nav class="nav-pill glass">
         <a href="#home" class="nav-link active">Home</a>
         <a href="#playlist" class="nav-link">Music</a>
@@ -70,11 +82,13 @@
         <a href="#promise" class="nav-link">Promise</a>
     </nav>
 
+    <!-- Animated Background -->
     <div class="blob bg-rose-100 top-0 left-0"></div>
     <div class="blob bg-orange-50 bottom-0 right-0"></div>
 
     <main class="min-h-screen py-10" style="width: 100vw; margin: 0;">
-
+        
+        <!-- Section 1: Hero -->
         <section id="home" class="h-screen flex flex-col items-center justify-center text-center reveal relative overflow-hidden">
             <div class="fixed inset-0 -z-10" style="background-size: cover; background-position: center; background-repeat: no-repeat; transition: opacity 1s ease;"></div>
             <div class="absolute inset-0 bg-white/50 -z-10"></div>
@@ -83,6 +97,7 @@
             <p class="text-stone-500 italic text-xl mt-6 font-light max-w-xl" style="text-shadow: 0 0 5px rgba(255,255,255,0.6);">"Memulai cerita indah, satu detik pada satu waktu."</p>
         </section>
 
+        <!-- Section 2: Counter -->
         <section class="mb-40 reveal">
             <div class="glass rounded-[3rem] p-10 md:p-20 text-center">
                 <h2 class="serif text-2xl mb-12 text-stone-700 uppercase tracking-widest">Since Day One</h2>
@@ -95,9 +110,11 @@
             </div>
         </section>
 
+        <!-- Section 3: Music Playlist -->
         <section id="playlist" class="mb-40 reveal">
             <h2 class="serif text-4xl text-center mb-16 text-stone-800">Our Playlist</h2>
             <div class="grid lg:grid-cols-5 gap-8">
+                <!-- Music Player Card -->
                 <div class="lg:col-span-2 glass p-8 rounded-[2.5rem] flex flex-col items-center">
                     <div id="albumArt" class="album-art w-44 h-44 rounded-full border-8 border-white shadow-2xl mb-8 bg-black flex items-center justify-center">
                         <i data-lucide="heart" class="w-16 h-16 text-white fill-current"></i>
@@ -120,6 +137,7 @@
                         <button onclick="toggleRepeat()" id="repeatBtn" class="text-stone-300"><i data-lucide="repeat" class="w-4 h-4"></i></button>
                     </div>
                 </div>
+                <!-- Song List -->
                 <div class="lg:col-span-3 glass rounded-[2.5rem] p-4 overflow-hidden">
                     <div id="songContainer" class="space-y-1 max-h-[380px] overflow-y-auto pr-2"></div>
                 </div>
@@ -127,6 +145,7 @@
             <audio id="mainAudio" src=""></audio>
         </section>
 
+        <!-- Section 4: Story Timeline -->
         <section id="story" class="mb-40 reveal">
             <h2 class="serif text-4xl text-center mb-20 text-stone-800">Where It All Began</h2>
             <div class="relative max-w-3xl mx-auto">
@@ -152,6 +171,7 @@
             </div>
         </section>
 
+        <!-- Section 5: Couple Profiles -->
         <section id="couple" class="grid md:grid-cols-2 gap-12 mb-40">
             <div class="reveal">
                 <div class="glass p-10 rounded-[3rem] flex flex-col items-center text-center transition-transform hover:-translate-y-2">
@@ -171,6 +191,7 @@
             </div>
         </section>
 
+        <!-- SECTION 6: GALERI FOTO (INI DIA!) -->
         <section id="gallery" class="mb-40 reveal">
             <h2 class="serif text-4xl text-center mb-16 text-stone-800">Love in Frames</h2>
             <div class="flex justify-center">
@@ -185,6 +206,7 @@
             <p class="text-center mt-8 text-stone-400 text-xs tracking-widest italic uppercase">Momen ini milik kita</p>
         </section>
 
+        <!-- Section 7: Promises -->
         <section id="promise" class="mb-40 reveal">
             <div class="glass p-12 md:p-20 rounded-[3rem] text-center bg-stone-800 text-white relative overflow-hidden">
                 <div class="absolute top-0 right-0 p-10 opacity-10"><i data-lucide="heart" class="w-32 h-32"></i></div>
@@ -202,6 +224,7 @@
             </div>
         </section>
 
+        <!-- Section 8: Love Letter -->
         <section class="mb-40 reveal text-center max-w-2xl mx-auto">
             <i data-lucide="mail" class="w-8 h-8 mx-auto text-stone-300 mb-6"></i>
             <h2 class="serif text-4xl mb-8">Pesan Untukmu</h2>
@@ -221,6 +244,7 @@
     <script>
         lucide.createIcons();
 
+        // Reveal Logic
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -236,10 +260,12 @@
         }, { threshold: 0.2 });
         document.querySelectorAll('section').forEach(el => observer.observe(el));
 
+        // Music Player Logic
         const songFiles = ['33× - Perunggu.mp3', 'DJ ENGGAK  DULU - (Slowed & Reverb).mp3', 'Kota Ini Tak Sama Tanpamu - Nadhif Basalamah.mp3', 'Nina - Feast.mp3', 'ORANG BARU LEBE GACOR - ECKO SHOW, JUAN REZA, CHESYLINO.mp3'];
         const songs = songFiles.map(file => {
             const name = file.replace('.mp3', '');
             const [title, artist] = name.split(' - ');
+            // encodeURI to handle spaces and special characters in filenames
             return { title: (title||'').trim(), artist: (artist||'').trim(), src: encodeURI('music/' + file) };
         });
 
@@ -273,6 +299,7 @@
             document.getElementById('currentTitle').innerText = songs[currentIdx].title;
             document.getElementById('currentArtist').innerText = songs[currentIdx].artist;
             renderPlaylist();
+            // ensure browser starts loading metadata
             try { audio.load(); } catch(e) {}
             if(isPlaying) audio.play();
         }
@@ -324,6 +351,7 @@
             }
         });
 
+        // Update duration display when metadata is loaded
         audio.addEventListener('loadedmetadata', () => {
             if(audio.duration) {
                 const dm = Math.floor(audio.duration / 60);
@@ -332,6 +360,7 @@
             }
         });
 
+        // Allow seeking with progress bar
         const progressBarEl = document.getElementById('progressBar');
         progressBarEl.addEventListener('input', (e) => {
             if(!audio.duration) return;
@@ -342,6 +371,7 @@
         audio.addEventListener('ended', () => { if(isRepeat) { audio.play(); } else { nextSong(); } });
         renderPlaylist();
 
+        // Countdown (Jan 1, 2026, 14:30)
         const start = new Date("2026-01-01T14:30:00").getTime();
         function updateCounter() {
             const diff = new Date().getTime() - start;
@@ -352,6 +382,7 @@
         }
         setInterval(updateCounter, 1000); updateCounter();
 
+        // Gallery Slideshow
         const galleryImages = ['img1.jpeg', 'img2.jpeg', 'img3.jpeg', 'img4.jpeg', 'img5.jpeg'];
         let currentGalleryIdx = 0;
         const galleryImg = document.getElementById('galleryImg');
@@ -369,8 +400,10 @@
             galleryImg.src = `images/gallery/${galleryImages[currentGalleryIdx]}`;
         }
 
+        // Auto slideshow for gallery
         setInterval(nextGallery, 5000);
 
+        // Auto slideshow for background
         let currentBgIdx = 0;
         setInterval(() => {
             bgDiv.style.opacity = 0;
@@ -381,6 +414,7 @@
             }, 500);
         }, 7000);
 
+        // Heart Move
         document.addEventListener('mousemove', (e) => {
             if(e.target.closest('button') || e.target.closest('a')) return;
             const heart = document.createElement('div');
@@ -392,7 +426,6 @@
         });
 
         document.addEventListener('touchmove', (e) => {
-            e.preventDefault();
             if(e.target.closest('button') || e.target.closest('a')) return;
             const touch = e.touches[0];
             const heart = document.createElement('div');
@@ -401,7 +434,7 @@
             heart.style.left = touch.clientX + 'px'; heart.style.top = touch.clientY + 'px';
             document.body.appendChild(heart);
             lucide.createIcons(); setTimeout(() => heart.remove(), 2000);
-        }, { passive: false });
+        });
         lucide.createIcons();
     </script>
 </body>
