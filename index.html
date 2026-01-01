@@ -3,299 +3,406 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Untuk Dewi</title>
+    <title>Agus & Dewi - Our Eternal Love</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Great+Vibes&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@300;500;600&display=swap');
-
-        :root {
-            --pink-soft: #ffafbd;
-            --peach: #ffc3a0;
-            --glass: rgba(255, 255, 255, 0.8);
-            --text: #555;
+        html, body { margin: 0; padding: 0; }
+        :root { --primary: #d4a373; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #fffafb;
+            color: #4a4a4a;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
         }
-
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            font-family: 'Quicksand', sans-serif;
-            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        .container {
-            position: relative;
-            z-index: 10;
-            text-align: center;
-            background: var(--glass);
-            padding: 35px 25px;
-            border-radius: 30px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+        .serif { font-family: 'Playfair Display', serif; }
+        .cursive { font-family: 'Great Vibes', cursive; }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.5);
             backdrop-filter: blur(15px);
-            max-width: 360px;
-            width: 85%;
-            transform: translateY(30px);
-            opacity: 0;
-            transition: all 1.5s cubic-bezier(0.19, 1, 0.22, 1);
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.7);
         }
 
-        .container.show {
-            transform: translateY(0);
-            opacity: 1;
+        .nav-pill {
+            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
+            z-index: 100; display: flex; gap: 12px; padding: 10px 20px;
+            border-radius: 100px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);
         }
+        .nav-link { color: #888; transition: all 0.3s; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; }
+        .nav-link.active { color: #333; }
 
-        .photo-container {
-            width: 130px;
-            height: 130px;
-            margin: -80px auto 20px;
-            position: relative;
-        }
+        .blob { position: fixed; width: 600px; height: 600px; border-radius: 50%; filter: blur(100px); z-index: -1; opacity: 0.4; animation: move 25s infinite alternate; }
+        @keyframes move { from { transform: translate(-10%, -10%); } to { transform: translate(30%, 20%); } }
 
-        .photo-frame {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 5px solid white;
-            overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            background: #fff;
-        }
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 1s ease-out; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
 
-        .photo-frame img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        .album-art.playing { animation: rotate 12s linear infinite; }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        
+        input[type="range"] { accent-color: #d4a373; cursor: pointer; }
 
-        .floating-heart {
-            position: absolute;
-            bottom: 5px;
-            right: 5px;
-            font-size: 24px;
-            animation: heartBeat 1.5s infinite;
-        }
+        .heart-particle { position: fixed; pointer-events: none; z-index: 1000; animation: heartRise 2s ease-out forwards; }
+        @keyframes heartRise { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-150px) scale(1.5); opacity: 0; } }
+    
+        .gallery-item:hover img { transform: scale(1.1); filter: grayscale(0); }
 
-        @keyframes heartBeat {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
+        .album-art { background: #000; position: relative; overflow: hidden; }
+        .album-art::before {
+            content: "";
+            position: absolute; inset: 6px; border-radius: 50%;
+            background: repeating-radial-gradient(circle at center, rgba(255,255,255,0.02) 0 2px, transparent 2px 4px);
+            z-index: 1;
         }
-
-        h1 {
-            font-family: 'Dancing Script', cursive;
-            font-size: 2.3rem;
-            color: #d4a5a5;
-            margin: 10px 0;
-        }
-
-        .message-box {
-            min-height: 90px;
-            font-size: 1rem;
-            line-height: 1.6;
-            color: var(--text);
-            margin-bottom: 20px;
-        }
-
-        #btn-surprise {
-            background: linear-gradient(45deg, #ffafbd, #ffc3a0);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 50px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: 0 10px 20px rgba(255, 175, 189, 0.4);
-            transition: 0.3s;
-        }
-
-        #btn-surprise:hover {
-            transform: scale(1.05);
-            box-shadow: 0 15px 25px rgba(255, 175, 189, 0.6);
-        }
-
-        .wa-button {
-            display: none;
-            background: #25D366;
-            color: white;
-            text-decoration: none;
-            padding: 12px 25px;
-            border-radius: 50px;
-            font-size: 14px;
-            font-weight: 600;
-            margin-top: 20px;
-            box-shadow: 0 10px 20px rgba(37, 211, 102, 0.2);
-        }
-
-        .final-text {
-            display: none;
-            font-style: italic;
-            color: #d4a5a5;
-            margin-top: 15px;
-            font-size: 0.95rem;
-            font-weight: 500;
-            line-height: 1.6;
-            animation: fadeInText 2s ease;
-        }
-
-        @keyframes fadeInText {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .album-art > i { position: relative; z-index: 2; }
     </style>
 </head>
 <body>
 
-    <audio id="backsound" loop>
-        <source src="https://files.catbox.moe/fdy1gq.m4a" type="audio/mp4">
-    </audio>
+    <nav class="nav-pill glass">
+        <a href="#home" class="nav-link active">Home</a>
+        <a href="#playlist" class="nav-link">Music</a>
+        <a href="#story" class="nav-link">Story</a>
+        <a href="#gallery" class="nav-link">Gallery</a>
+        <a href="#promise" class="nav-link">Promise</a>
+    </nav>
 
-    <canvas id="canvas"></canvas>
+    <div class="blob bg-rose-100 top-0 left-0"></div>
+    <div class="blob bg-orange-50 bottom-0 right-0"></div>
 
-    <div class="container" id="card">
-        <div class="photo-container">
-            <div class="photo-frame">
-                <img src="https://iili.io/foc82lR.jpg" alt="Dewi">
+    <main class="min-h-screen py-10" style="width: 100vw; margin: 0;">
+
+        <section id="home" class="h-screen flex flex-col items-center justify-center text-center reveal relative overflow-hidden">
+            <div class="fixed inset-0 -z-10" style="background-size: cover; background-position: center; background-repeat: no-repeat; transition: opacity 1s ease;"></div>
+            <div class="absolute inset-0 bg-white/50 -z-10"></div>
+            <div class="px-6 py-2 rounded-full glass mb-8" style="box-shadow: 0 0 20px rgba(255,255,255,0.3);"><span class="text-[10px] tracking-[0.5em] uppercase font-bold text-stone-500">The Journey of Love</span></div>
+            <h1 class="serif text-6xl md:text-9xl text-stone-800 mb-4 tracking-tighter" style="text-shadow: 0 0 10px rgba(255,255,255,0.8);">Agus <span class="cursive text-5xl md:text-7xl text-stone-400">&</span> Dewi</h1>
+            <p class="text-stone-500 italic text-xl mt-6 font-light max-w-xl" style="text-shadow: 0 0 5px rgba(255,255,255,0.6);">"Memulai cerita indah, satu detik pada satu waktu."</p>
+        </section>
+
+        <section class="mb-40 reveal">
+            <div class="glass rounded-[3rem] p-10 md:p-20 text-center">
+                <h2 class="serif text-2xl mb-12 text-stone-700 uppercase tracking-widest">Since Day One</h2>
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div><div id="days" class="text-6xl font-bold text-stone-800">0</div><div class="text-[10px] uppercase tracking-widest mt-2 text-stone-400">Hari</div></div>
+                    <div><div id="hours" class="text-6xl font-bold text-stone-800">0</div><div class="text-[10px] uppercase tracking-widest mt-2 text-stone-400">Jam</div></div>
+                    <div><div id="minutes" class="text-6xl font-bold text-stone-800">0</div><div class="text-[10px] uppercase tracking-widest mt-2 text-stone-400">Menit</div></div>
+                    <div><div id="seconds" class="text-6xl font-bold text-stone-800">0</div><div class="text-[10px] uppercase tracking-widest mt-2 text-stone-400">Detik</div></div>
+                </div>
             </div>
-            <div class="floating-heart">🌸</div>
-        </div>
+        </section>
 
-        <h1>Happy Birthday, Dewi!</h1>
+        <section id="playlist" class="mb-40 reveal">
+            <h2 class="serif text-4xl text-center mb-16 text-stone-800">Our Playlist</h2>
+            <div class="grid lg:grid-cols-5 gap-8">
+                <div class="lg:col-span-2 glass p-8 rounded-[2.5rem] flex flex-col items-center">
+                    <div id="albumArt" class="album-art w-44 h-44 rounded-full border-8 border-white shadow-2xl mb-8 bg-black flex items-center justify-center">
+                        <i data-lucide="heart" class="w-16 h-16 text-white fill-current"></i>
+                    </div>
+                    <div class="text-center mb-6">
+                        <h3 id="currentTitle" class="text-xl font-bold text-stone-800">Pilih Lagu</h3>
+                        <p id="currentArtist" class="text-stone-400 text-sm italic">Putar musik kita</p>
+                    </div>
+                    <div class="w-full mb-6">
+                        <input type="range" id="progressBar" value="0" min="0" max="100" class="w-full h-1 bg-stone-200 rounded-lg">
+                        <div class="flex justify-between text-[10px] text-stone-400 mt-2">
+                            <span id="currentTime">0:00</span><span id="duration">0:00</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-6">
+                        <button onclick="toggleShuffle()" id="shuffleBtn" class="text-stone-300"><i data-lucide="shuffle" class="w-4 h-4"></i></button>
+                        <button onclick="prevSong()"><i data-lucide="skip-back" class="w-6 h-6 fill-current"></i></button>
+                        <button onclick="togglePlay()" id="playBtn" class="w-14 h-14 bg-stone-800 rounded-full flex items-center justify-center text-white shadow-lg"><i data-lucide="play" class="w-6 h-6 fill-current"></i></button>
+                        <button onclick="nextSong()"><i data-lucide="skip-forward" class="w-6 h-6 fill-current"></i></button>
+                        <button onclick="toggleRepeat()" id="repeatBtn" class="text-stone-300"><i data-lucide="repeat" class="w-4 h-4"></i></button>
+                    </div>
+                </div>
+                <div class="lg:col-span-3 glass rounded-[2.5rem] p-4 overflow-hidden">
+                    <div id="songContainer" class="space-y-1 max-h-[380px] overflow-y-auto pr-2"></div>
+                </div>
+            </div>
+            <audio id="mainAudio" src=""></audio>
+        </section>
 
-        <div class="message-box">
-            <p id="typing-text"></p>
-        </div>
+        <section id="story" class="mb-40 reveal">
+            <h2 class="serif text-4xl text-center mb-20 text-stone-800">Where It All Began</h2>
+            <div class="relative max-w-3xl mx-auto">
+                <div class="absolute left-1/2 -translate-x-1/2 w-px h-full bg-stone-200"></div>
+                <div class="relative mb-20 flex justify-between items-center w-full">
+                    <div class="w-5/12 hidden md:block"></div>
+                    <div class="z-20 p-2 bg-white rounded-full border border-stone-200"><i data-lucide="message-circle" class="w-4 h-4 text-stone-400"></i></div>
+                    <div class="w-full md:w-5/12 glass p-6 rounded-3xl">
+                        <span class="text-stone-400 text-xs font-bold uppercase">Maret 2025</span>
+                        <h4 class="font-bold text-lg mt-1">Pertama Bertemu</h4>
+                        <p class="text-sm text-stone-500 mt-2 italic">Disini hari pertama kita ketemu.</p>
+                    </div>
+                </div>
+                <div class="relative mb-20 flex justify-between items-center w-full flex-row-reverse">
+                    <div class="w-5/12 hidden md:block"></div>
+                    <div class="z-20 p-2 bg-white rounded-full border border-stone-200"><i data-lucide="heart" class="w-4 h-4 text-rose-400 fill-current"></i></div>
+                    <div class="w-full md:w-5/12 glass p-6 rounded-3xl text-right">
+                        <span class="text-stone-400 text-xs font-bold uppercase">1 Januari 2026</span>
+                        <h4 class="font-bold text-lg mt-1">Hari Kita Dimulai</h4>
+                        <p class="text-sm text-stone-500 mt-2 italic">Saat dunia seakan berhenti dan hanya ada kita berdua.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        <button id="btn-surprise" onclick="revealSecret()">Klik ini, Wi ✨</button>
+        <section id="couple" class="grid md:grid-cols-2 gap-12 mb-40">
+            <div class="reveal">
+                <div class="glass p-10 rounded-[3rem] flex flex-col items-center text-center transition-transform hover:-translate-y-2">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Agus" class="w-40 h-40 rounded-full border-4 border-white shadow-xl mb-6 bg-white">
+                    <h3 class="serif text-2xl text-stone-800">Agus Triananda</h3>
+                    <p class="text-stone-400 text-[10px] tracking-widest font-bold mb-4">20 AGUSTUS 2005</p>
+                    <p class="italic text-stone-600 font-light text-sm">"Kamu adalah rumah yang kupilih, jangan buat aku ngontrak yah hahaha."</p>
+                </div>
+            </div>
+            <div class="reveal">
+                <div class="glass p-10 rounded-[3rem] flex flex-col items-center text-center transition-transform hover:-translate-y-2">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Dewi" class="w-40 h-40 rounded-full border-4 border-white shadow-xl mb-6 bg-white">
+                    <h3 class="serif text-2xl text-stone-800">Dewi Anggraeni</h3>
+                    <p class="text-stone-400 text-[10px] tracking-widest font-bold mb-4">01 JANUARI 2006</p>
+                    <p class="italic text-stone-600 font-light text-sm">"Lopyuuu (kata-kata ta disini sayang, cuman ndakutau jadi ku isi saja)."</p>
+                </div>
+            </div>
+        </section>
 
-        <p id="wish" class="final-text"></p>
+        <section id="gallery" class="mb-40 reveal">
+            <h2 class="serif text-4xl text-center mb-16 text-stone-800">Love in Frames</h2>
+            <div class="flex justify-center">
+                <div class="gallery-slideshow glass rounded-[2.5rem] overflow-hidden aspect-video max-w-4xl w-full relative">
+                    <img id="galleryImg" src="images/gallery/img1.jpeg" class="w-full h-full object-cover transition-opacity duration-1000">
+                    <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">
+                        <button onclick="prevGallery()" class="bg-white/80 p-2 rounded-full"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+                        <button onclick="nextGallery()" class="bg-white/80 p-2 rounded-full"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+                    </div>
+                </div>
+            </div>
+            <p class="text-center mt-8 text-stone-400 text-xs tracking-widest italic uppercase">Momen ini milik kita</p>
+        </section>
 
-        <a href="https://wa.me/6285756444803?text=Makasihhh,%20Iya%20aku%20mau%20%F0%9F%92%95" 
-           class="wa-button" id="waBtn">
-           Balas di WhatsApp 💗
-        </a>
-    </div>
+        <section id="promise" class="mb-40 reveal">
+            <div class="glass p-12 md:p-20 rounded-[3rem] text-center bg-stone-800 text-white relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-10 opacity-10"><i data-lucide="heart" class="w-32 h-32"></i></div>
+                <h2 class="serif text-4xl mb-10">The Promise</h2>
+                <div class="grid md:grid-cols-2 gap-10 text-left">
+                    <div class="flex gap-4">
+                        <div class="text-rose-300 font-serif text-3xl">01</div>
+                        <div><h5 class="font-bold mb-1">Saling Terbuka</h5><p class="text-stone-400 text-sm">Komunikasi dijaga, bercerita tentang apa pun tanpa ada rahasia.</p></div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="text-rose-300 font-serif text-3xl">02</div>
+                        <div><h5 class="font-bold mb-1">Saling Menjaga</h5><p class="text-stone-400 text-sm">Menjaga perasaan satu sama lain dalam kondisi apa pun.</p></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-40 reveal text-center max-w-2xl mx-auto">
+            <i data-lucide="mail" class="w-8 h-8 mx-auto text-stone-300 mb-6"></i>
+            <h2 class="serif text-4xl mb-8">Pesan Untukmu</h2>
+            <p class="text-stone-600 leading-loose italic">
+                "Terima kasih sudah menjadi bagian paling berharga dalam hidupku. Aku ingin kita terus seperti ini, belajar dewasa bersama, menghadapi badai bersama, dan tertawa hingga hari tua. Sayang, kamu adalah rumah bagiku."
+            </p>
+        </section>
+
+        <footer class="text-center pb-32">
+            <p class="text-[10px] tracking-[1em] uppercase text-stone-400 mb-6">Agus & Dewi Forever</p>
+            <div class="flex justify-center gap-4">
+                <i data-lucide="heart" class="w-4 h-4 text-rose-300 fill-current"></i>
+            </div>
+        </footer>
+    </main>
 
     <script>
-        const text = "Di hari spesialmu ini, saya cuma mau bilang, kamu itu orang yang hebat, dan besar harapanku dalam doa—semoga dunia memberikan banyak kebahagiaan buat kamu hari ini dan seterusnya. Terima kasih sudah hadir dan memberi arti dengan caramu sendiri. Apa pun perjalanan yang sedang kamu jalani sekarang, semoga selalu dipenuhi hal-hal baik dan orang-orang yang tulus. Selamat ulang tahun, Divine Grace...";
-        const wishText = "Oh yah, saya inget kamu pernah bilang bakal ngasih jawaban beberapa bulan ke depan, di beberapa bulan yang lalu hehe. Sekarang saya cuma mau mastiin aja—apa pun jawabannya, akan saya hargai. Maaf jika kesannya keras kepala, tapi benar begitulah, saya belum menyerah sama kamu.";
-        
-        let charIndex = 0;
-        let wishIndex = 0;
+        lucide.createIcons();
 
-        function typeEffect() {
-            if (charIndex < text.length) {
-                document.getElementById("typing-text").innerHTML += text.charAt(charIndex);
-                charIndex++;
-                setTimeout(typeEffect, 50);
-            }
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    const id = entry.target.getAttribute('id');
+                    if (id) {
+                        document.querySelectorAll('.nav-link').forEach(link => {
+                            link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+                        });
+                    }
+                }
+            });
+        }, { threshold: 0.2 });
+        document.querySelectorAll('section').forEach(el => observer.observe(el));
+
+        const songFiles = ['33× - Perunggu.mp3', 'DJ ENGGAK  DULU - (Slowed & Reverb).mp3', 'Kota Ini Tak Sama Tanpamu - Nadhif Basalamah.mp3', 'Nina - Feast.mp3', 'ORANG BARU LEBE GACOR - ECKO SHOW, JUAN REZA, CHESYLINO.mp3'];
+        const songs = songFiles.map(file => {
+            const name = file.replace('.mp3', '');
+            const [title, artist] = name.split(' - ');
+            return { title: (title||'').trim(), artist: (artist||'').trim(), src: encodeURI('music/' + file) };
+        });
+
+        let currentIdx = 0;
+        let isPlaying = false;
+        let isShuffle = false;
+        let isRepeat = false;
+        const audio = document.getElementById('mainAudio');
+        const playBtn = document.getElementById('playBtn');
+        const songContainer = document.getElementById('songContainer');
+
+        function renderPlaylist() {
+            songContainer.innerHTML = songs.map((song, idx) => `
+                <div onclick="loadSong(${idx})" class="group flex items-center justify-between p-3 rounded-2xl hover:bg-white/60 transition-all cursor-pointer ${idx === currentIdx ? 'bg-white/80 shadow-sm border border-stone-100' : ''}">
+                    <div class="flex items-center gap-3">
+                        <div class="text-[10px] font-bold text-stone-400 w-4">${idx + 1}</div>
+                        <div>
+                            <h4 class="text-xs font-bold text-stone-700">${song.title}</h4>
+                            <p class="text-[9px] text-stone-400">${song.artist}</p>
+                        </div>
+                    </div>
+                    ${idx === currentIdx && isPlaying ? '<i data-lucide="volume-2" class="w-3 h-3 text-stone-800"></i>' : ''}
+                </div>
+            `).join('');
+            lucide.createIcons();
         }
 
-        function typeWishEffect() {
-            if (wishIndex < wishText.length) {
-                document.getElementById("wish").innerHTML += wishText.charAt(wishIndex);
-                wishIndex++;
-                setTimeout(typeWishEffect, 60);
+        function loadSong(idx) {
+            currentIdx = idx;
+            audio.src = songs[currentIdx].src;
+            document.getElementById('currentTitle').innerText = songs[currentIdx].title;
+            document.getElementById('currentArtist').innerText = songs[currentIdx].artist;
+            renderPlaylist();
+            try { audio.load(); } catch(e) {}
+            if(isPlaying) audio.play();
+        }
+
+        function togglePlay() {
+            if(!audio.src) loadSong(0);
+            if(isPlaying) {
+                audio.pause();
+                playBtn.innerHTML = '<i data-lucide="play" class="w-6 h-6 fill-current"></i>';
+                document.getElementById('albumArt').classList.remove('playing');
             } else {
-                document.getElementById('waBtn').style.display = 'inline-block';
-                document.getElementById('waBtn').style.animation = 'fadeIn 1s forwards';
+                audio.play();
+                playBtn.innerHTML = '<i data-lucide="pause" class="w-6 h-6 fill-current"></i>';
+                document.getElementById('albumArt').classList.add('playing');
             }
+            isPlaying = !isPlaying;
+            lucide.createIcons();
         }
 
-        function revealSecret() {
-            document.getElementById('backsound').play();
-            document.getElementById('btn-surprise').style.display = 'none';
-            document.getElementById('wish').style.display = 'block';
-            
-            typeWishEffect();
-            createBurst();
+        function nextSong() {
+            currentIdx = isShuffle ? Math.floor(Math.random()*songs.length) : (currentIdx + 1) % songs.length;
+            loadSong(currentIdx);
+            audio.play(); isPlaying = true;
+            playBtn.innerHTML = '<i data-lucide="pause" class="w-6 h-6 fill-current"></i>';
+            document.getElementById('albumArt').classList.add('playing');
+            lucide.createIcons();
         }
 
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-
-        function resize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+        function prevSong() {
+            currentIdx = (currentIdx - 1 + songs.length) % songs.length;
+            loadSong(currentIdx);
+            audio.play(); isPlaying = true;
+            lucide.createIcons();
         }
-        window.addEventListener('resize', resize);
-        resize();
 
-        class Particle {
-            constructor() {
-                this.reset();
+        function toggleShuffle() { isShuffle = !isShuffle; document.getElementById('shuffleBtn').classList.toggle('text-stone-800', isShuffle); }
+        function toggleRepeat() { isRepeat = !isRepeat; document.getElementById('repeatBtn').classList.toggle('text-stone-800', isRepeat); }
+
+        audio.addEventListener('timeupdate', () => {
+            const progress = (audio.currentTime / audio.duration) * 100;
+            document.getElementById('progressBar').value = progress || 0;
+            const m = Math.floor(audio.currentTime / 60);
+            const s = Math.floor(audio.currentTime % 60);
+            document.getElementById('currentTime').innerText = `${m}:${s < 10 ? '0'+s : s}`;
+            if(audio.duration) {
+                const dm = Math.floor(audio.duration / 60);
+                const ds = Math.floor(audio.duration % 60);
+                document.getElementById('duration').innerText = `${dm}:${ds < 10 ? '0'+ds : ds}`;
             }
-            reset() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * -canvas.height;
-                this.size = Math.random() * 4 + 2;
-                this.speed = Math.random() * 1 + 0.5;
-                this.drift = Math.random() * 1 - 0.5;
-                this.opacity = Math.random() * 0.5 + 0.3;
-                this.color = `rgba(255, ${Math.floor(Math.random() * 50 + 180)}, ${Math.floor(Math.random() * 50 + 180)}, ${this.opacity})`;
+        });
+
+        audio.addEventListener('loadedmetadata', () => {
+            if(audio.duration) {
+                const dm = Math.floor(audio.duration / 60);
+                const ds = Math.floor(audio.duration % 60);
+                document.getElementById('duration').innerText = `${dm}:${ds < 10 ? '0'+ds : ds}`;
             }
-            update() {
-                this.y += this.speed;
-                this.x += this.drift;
-                if (this.y > canvas.height) this.reset();
-            }
-            draw() {
-                ctx.fillStyle = this.color;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
+        });
+
+        const progressBarEl = document.getElementById('progressBar');
+        progressBarEl.addEventListener('input', (e) => {
+            if(!audio.duration) return;
+            const val = Number(e.target.value);
+            audio.currentTime = (val / 100) * audio.duration;
+        });
+
+        audio.addEventListener('ended', () => { if(isRepeat) { audio.play(); } else { nextSong(); } });
+        renderPlaylist();
+
+        const start = new Date("2026-01-01T14:30:00").getTime();
+        function updateCounter() {
+            const diff = new Date().getTime() - start;
+            document.getElementById("days").innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
+            document.getElementById("hours").innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            document.getElementById("minutes").innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            document.getElementById("seconds").innerText = Math.floor((diff % (1000 * 60)) / 1000);
+        }
+        setInterval(updateCounter, 1000); updateCounter();
+
+        const galleryImages = ['img1.jpeg', 'img2.jpeg', 'img3.jpeg', 'img4.jpeg', 'img5.jpeg'];
+        let currentGalleryIdx = 0;
+        const galleryImg = document.getElementById('galleryImg');
+        const homeSection = document.getElementById('home');
+        const bgDiv = document.querySelector('#home .fixed');
+        bgDiv.style.backgroundImage = `url(images/gallery/${galleryImages[0]})`;
+
+        function nextGallery() {
+            currentGalleryIdx = (currentGalleryIdx + 1) % galleryImages.length;
+            galleryImg.src = `images/gallery/${galleryImages[currentGalleryIdx]}`;
         }
 
-        function createBurst() {
-            for(let i=0; i<30; i++) {
-                let p = new Particle();
-                p.x = canvas.width / 2;
-                p.y = canvas.height / 2;
-                p.speed = (Math.random() - 0.5) * 10;
-                p.drift = (Math.random() - 0.5) * 10;
-                particles.push(p);
-            }
+        function prevGallery() {
+            currentGalleryIdx = (currentGalleryIdx - 1 + galleryImages.length) % galleryImages.length;
+            galleryImg.src = `images/gallery/${galleryImages[currentGalleryIdx]}`;
         }
 
-        function init() {
-            for (let i = 0; i < 70; i++) particles.push(new Particle());
-        }
+        setInterval(nextGallery, 5000);
 
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => { p.update(); p.draw(); });
-            requestAnimationFrame(animate);
-        }
-
-        window.onload = () => {
-            document.getElementById('backsound').play().catch(() => {});
+        let currentBgIdx = 0;
+        setInterval(() => {
+            bgDiv.style.opacity = 0;
             setTimeout(() => {
-                document.getElementById('card').classList.add('show');
-                typeEffect();
+                currentBgIdx = (currentBgIdx + 1) % galleryImages.length;
+                bgDiv.style.backgroundImage = `url(images/gallery/${galleryImages[currentBgIdx]})`;
+                bgDiv.style.opacity = 1;
             }, 500);
-            init();
-            animate();
-        };
+        }, 7000);
+
+        document.addEventListener('mousemove', (e) => {
+            if(e.target.closest('button') || e.target.closest('a')) return;
+            const heart = document.createElement('div');
+            heart.innerHTML = `<i data-lucide="heart" class="w-5 h-5 text-rose-300 fill-current"></i>`;
+            heart.className = 'heart-particle';
+            heart.style.left = e.clientX + 'px'; heart.style.top = e.clientY + 'px';
+            document.body.appendChild(heart);
+            lucide.createIcons(); setTimeout(() => heart.remove(), 2000);
+        });
+
+        document.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            if(e.target.closest('button') || e.target.closest('a')) return;
+            const touch = e.touches[0];
+            const heart = document.createElement('div');
+            heart.innerHTML = `<i data-lucide="heart" class="w-5 h-5 text-rose-300 fill-current"></i>`;
+            heart.className = 'heart-particle';
+            heart.style.left = touch.clientX + 'px'; heart.style.top = touch.clientY + 'px';
+            document.body.appendChild(heart);
+            lucide.createIcons(); setTimeout(() => heart.remove(), 2000);
+        }, { passive: false });
+        lucide.createIcons();
     </script>
 </body>
 </html>
