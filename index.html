@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Untuk Dewi</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@300;500;600&display=swap');
+
+        :root {
+            --pink-soft: #ffafbd;
+            --peach: #ffc3a0;
+            --glass: rgba(255, 255, 255, 0.8);
+            --text: #555;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            background: var(--glass);
+            padding: 35px 25px;
+            border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+            backdrop-filter: blur(15px);
+            max-width: 360px;
+            width: 85%;
+            transform: translateY(30px);
+            opacity: 0;
+            transition: all 1.5s cubic-bezier(0.19, 1, 0.22, 1);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .container.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .photo-container {
+            width: 130px;
+            height: 130px;
+            margin: -80px auto 20px;
+            position: relative;
+        }
+
+        .photo-frame {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 5px solid white;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            background: #fff;
+        }
+
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .floating-heart {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            font-size: 24px;
+            animation: heartBeat 1.5s infinite;
+        }
+
+        @keyframes heartBeat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.3rem;
+            color: #d4a5a5;
+            margin: 10px 0;
+        }
+
+        .message-box {
+            min-height: 90px;
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text);
+            margin-bottom: 20px;
+        }
+
+        #btn-surprise {
+            background: linear-gradient(45deg, #ffafbd, #ffc3a0);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(255, 175, 189, 0.4);
+            transition: 0.3s;
+        }
+
+        #btn-surprise:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 25px rgba(255, 175, 189, 0.6);
+        }
+
+        .wa-button {
+            display: none;
+            background: #25D366;
+            color: white;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 20px;
+            box-shadow: 0 10px 20px rgba(37, 211, 102, 0.2);
+        }
+
+        .final-text {
+            display: none;
+            font-style: italic;
+            color: #d4a5a5;
+            margin-top: 15px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            line-height: 1.6;
+            animation: fadeInText 2s ease;
+        }
+
+        @keyframes fadeInText {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="backsound" loop>
+        <source src="https://files.catbox.moe/fdy1gq.m4a" type="audio/mp4">
+    </audio>
+
+    <canvas id="canvas"></canvas>
+
+    <div class="container" id="card">
+        <div class="photo-container">
+            <div class="photo-frame">
+                <img src="https://iili.io/foc82lR.jpg" alt="Dewi">
+            </div>
+            <div class="floating-heart">🌸</div>
+        </div>
+
+        <h1>Happy Birthday, Dewi!</h1>
+
+        <div class="message-box">
+            <p id="typing-text"></p>
+        </div>
+
+        <button id="btn-surprise" onclick="revealSecret()">Klik ini, Wi ✨</button>
+
+        <p id="wish" class="final-text"></p>
+
+        <a href="https://wa.me/6285756444803?text=Makasihhh,%20Iya%20aku%20mau%20%F0%9F%92%95" 
+           class="wa-button" id="waBtn">
+           Balas di WhatsApp 💗
+        </a>
+    </div>
+
+    <script>
+        const text = "Di hari spesialmu ini, saya cuma mau bilang, kamu itu orang yang hebat, dan besar harapanku dalam doa—semoga dunia memberikan banyak kebahagiaan buat kamu hari ini dan seterusnya. Terima kasih sudah hadir dan memberi arti dengan caramu sendiri. Apa pun perjalanan yang sedang kamu jalani sekarang, semoga selalu dipenuhi hal-hal baik dan orang-orang yang tulus. Selamat ulang tahun, Divine Grace...";
+        const wishText = "Oh yah, saya inget kamu pernah bilang bakal ngasih jawaban beberapa bulan ke depan, di beberapa bulan yang lalu hehe. Sekarang saya cuma mau mastiin aja—apa pun jawabannya, akan saya hargai. Maaf jika kesannya keras kepala, tapi benar begitulah, saya belum menyerah sama kamu.";
+        
+        let charIndex = 0;
+        let wishIndex = 0;
+
+        function typeEffect() {
+            if (charIndex < text.length) {
+                document.getElementById("typing-text").innerHTML += text.charAt(charIndex);
+                charIndex++;
+                setTimeout(typeEffect, 50);
+            }
+        }
+
+        function typeWishEffect() {
+            if (wishIndex < wishText.length) {
+                document.getElementById("wish").innerHTML += wishText.charAt(wishIndex);
+                wishIndex++;
+                setTimeout(typeWishEffect, 60);
+            } else {
+                document.getElementById('waBtn').style.display = 'inline-block';
+                document.getElementById('waBtn').style.animation = 'fadeIn 1s forwards';
+            }
+        }
+
+        function revealSecret() {
+            document.getElementById('backsound').play();
+            document.getElementById('btn-surprise').style.display = 'none';
+            document.getElementById('wish').style.display = 'block';
+            
+            typeWishEffect();
+            createBurst();
+        }
+
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * -canvas.height;
+                this.size = Math.random() * 4 + 2;
+                this.speed = Math.random() * 1 + 0.5;
+                this.drift = Math.random() * 1 - 0.5;
+                this.opacity = Math.random() * 0.5 + 0.3;
+                this.color = `rgba(255, ${Math.floor(Math.random() * 50 + 180)}, ${Math.floor(Math.random() * 50 + 180)}, ${this.opacity})`;
+            }
+            update() {
+                this.y += this.speed;
+                this.x += this.drift;
+                if (this.y > canvas.height) this.reset();
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function createBurst() {
+            for(let i=0; i<30; i++) {
+                let p = new Particle();
+                p.x = canvas.width / 2;
+                p.y = canvas.height / 2;
+                p.speed = (Math.random() - 0.5) * 10;
+                p.drift = (Math.random() - 0.5) * 10;
+                particles.push(p);
+            }
+        }
+
+        function init() {
+            for (let i = 0; i < 70; i++) particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+
+        window.onload = () => {
+            document.getElementById('backsound').play().catch(() => {});
+            setTimeout(() => {
+                document.getElementById('card').classList.add('show');
+                typeEffect();
+            }, 500);
+            init();
+            animate();
+        };
+    </script>
+</body>
+</html>
