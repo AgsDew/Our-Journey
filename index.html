@@ -190,6 +190,7 @@
             <div class="flex justify-center">  
                 <div class="gallery-slideshow glass rounded-[2.5rem] overflow-hidden aspect-video max-w-4xl w-full relative">  
                     <img id="galleryImg" src="images/gallery/img1.jpg" class="w-full h-full object-cover transition-opacity duration-1000">  
+                    <video id="galleryVideo" class="w-full h-full object-cover transition-opacity duration-1000 hidden" controls preload="metadata"></video>  
                     <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">  
                         <button onclick="prevGallery()" class="bg-white/80 p-2 rounded-full"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>  
                         <button onclick="nextGallery()" class="bg-white/80 p-2 rounded-full"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>  
@@ -367,23 +368,92 @@
         setInterval(updateCounter, 1000); updateCounter();  
   
         const galleryImages = ['img1.jpg', 'img2.jpeg', 'img3.jpeg', 'img4.jpeg', 'img5.jpeg', 'img6.jpg'];  
+        const galleryItems = [  
+            { type: 'image', src: 'images/gallery/img1.jpg' },  
+            { type: 'image', src: 'images/gallery/img2.jpeg' },  
+            { type: 'image', src: 'images/gallery/img3.jpeg' },  
+            { type: 'image', src: 'images/gallery/img4.jpeg' },  
+            { type: 'image', src: 'images/gallery/img5.jpeg' },  
+            { type: 'image', src: 'images/gallery/img6.jpg' },  
+            { type: 'video', src: 'videos/gallery/vid1.mp4' }  
+        ];  
         let currentGalleryIdx = 0;  
         const galleryImg = document.getElementById('galleryImg');  
+        const galleryVideo = document.getElementById('galleryVideo');  
         const homeSection = document.getElementById('home');  
         const bgDiv = document.querySelector('#home .fixed');  
         bgDiv.style.backgroundImage = `url(images/gallery/${galleryImages[0]})`;  
   
+        let galleryAutoTimer = null;  
+        let videoStartedByUser = false;  
+  
+        function clearGalleryAutoTimer() {  
+            if (galleryAutoTimer) {  
+                clearTimeout(galleryAutoTimer);  
+                galleryAutoTimer = null;  
+            }  
+        }  
+  
+        function scheduleGalleryAdvance() {  
+            clearGalleryAutoTimer();  
+            const item = galleryItems[currentGalleryIdx];  
+            if (item.type === 'image') {  
+                galleryAutoTimer = setTimeout(() => { nextGallery(); }, 5000);  
+            } else if (item.type === 'video') {  
+                galleryAutoTimer = setTimeout(() => {  
+                    if (!videoStartedByUser && galleryVideo.paused && galleryVideo.currentTime < 0.5) {  
+                        nextGallery();  
+                    }  
+                }, 3000);  
+            }  
+        }  
+  
+        function updateGalleryDisplay() {  
+            const item = galleryItems[currentGalleryIdx];  
+            if (item.type === 'video') {  
+                galleryImg.classList.add('hidden');  
+                galleryVideo.classList.remove('hidden');  
+                videoStartedByUser = false;  
+  
+                galleryVideo.pause();  
+                galleryVideo.currentTime = 0;  
+                galleryVideo.controls = true;  
+                if (galleryVideo.src !== item.src) {  
+                    galleryVideo.src = item.src;  
+                    galleryVideo.load();  
+                }  
+                scheduleGalleryAdvance();  
+            } else {  
+                galleryVideo.pause();  
+                galleryVideo.classList.add('hidden');  
+                galleryImg.classList.remove('hidden');  
+                galleryImg.src = item.src;  
+                scheduleGalleryAdvance();  
+            }  
+        }  
+  
+        galleryVideo.addEventListener('play', () => {  
+            videoStartedByUser = true;  
+            clearGalleryAutoTimer();  
+        });  
+  
+        galleryVideo.addEventListener('ended', () => {  
+            if (videoStartedByUser) {  
+                nextGallery();  
+            }  
+        });  
+  
         function nextGallery() {  
-            currentGalleryIdx = (currentGalleryIdx + 1) % galleryImages.length;  
-            galleryImg.src = `images/gallery/${galleryImages[currentGalleryIdx]}`;  
+            clearGalleryAutoTimer();  
+            currentGalleryIdx = (currentGalleryIdx + 1) % galleryItems.length;  
+            updateGalleryDisplay();  
         }  
   
         function prevGallery() {  
-            currentGalleryIdx = (currentGalleryIdx - 1 + galleryImages.length) % galleryImages.length;  
-            galleryImg.src = `images/gallery/${galleryImages[currentGalleryIdx]}`;  
+            clearGalleryAutoTimer();  
+            currentGalleryIdx = (currentGalleryIdx - 1 + galleryItems.length) % galleryItems.length;  
+            updateGalleryDisplay();  
         }  
-  
-        setInterval(nextGallery, 5000);  
   
         let currentBgIdx = 0;  
         setInterval(() => {  
@@ -394,6 +464,8 @@
                 bgDiv.style.opacity = 1;  
             }, 500);  
         }, 7000);  
+  
+        updateGalleryDisplay();  
   
         document.addEventListener('mousemove', (e) => {  
             if(e.target.closest('button') || e.target.closest('a')) return;  
